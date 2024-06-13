@@ -16,7 +16,7 @@ A Postman collection is included to facilitate testing of the API endpoints. Com
 - **Auto-Increment ID**: Though not implemented in this submission, configuring the product ID to auto-increment could be achieved using annotations in the Entity Framework model to simplify object creation.
 
 ## Submission Note
-Navigate to the Ir.ApiTest project and run `dotnet run`. Refer to the embedded Postman collection for endpoint testing. My favorite TV show is "Berserk" - looking forward to your thoughts on the project!
+Navigate to the Ir.ApiTest project and run `dotnet run`. Refer to the embedded Postman collection for endpoint testing.
 
 Sincerely,
 Jon Taylor
