@@ -81,11 +81,9 @@ public class ProductsService
 
     public async Task<IActionResult> UpdateProduct(string id, JsonPatchDocument<Ir.IntegrationTest.Contracts.Product> patchDoc)
     {
-        // Task: Update the product with the matching id
         var entityProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         if (entityProduct == null)
         {
-            // Task: Return a 404 NotFound if the product is not found
             return new NotFoundObjectResult("Product not found.");
         }
 
