@@ -44,9 +44,13 @@ public class ProductsService
         return new OkObjectResult(dtoProduct);
     }
 
-    public async Task<IEnumerable<Ir.IntegrationTest.Contracts.Product>> GetAllProductsAsync()
+    public async Task<IEnumerable<Ir.IntegrationTest.Contracts.Product>> GetAllProductsAsync(int page = 1, int pageSize = 10)
     {
-        var products = await _context.Products.ToListAsync();
+        var products = await _context.Products
+                                     .Skip((page - 1) * pageSize)
+                                     .Take(pageSize)
+                                     .ToListAsync();
+
         return products.Select(p => new Ir.IntegrationTest.Contracts.Product
         {
             Id = p.Id,
