@@ -57,4 +57,22 @@ public class ProductsService
             Hash = p.Hash
         }).ToList();
     }
+
+    public async Task<Ir.IntegrationTest.Contracts.Product> GetProductAsync(string id)
+    {
+        var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        if (product == null) return null;
+
+        return new Ir.IntegrationTest.Contracts.Product
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Size = product.Size,
+            Colour = product.Colour,
+            Price = product.Price,
+            LastUpdated = product.LastUpdated,
+            Created = product.Created,
+            Hash = product.Hash
+        };
+    }
 }

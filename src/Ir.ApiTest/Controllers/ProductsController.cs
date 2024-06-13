@@ -25,9 +25,12 @@ public class ProductsController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public IActionResult GetProduct([FromRoute] string id)
+  public async Task<IActionResult> GetProduct([FromRoute] string id)
   {
-    throw new NotImplementedException();
+    var product = await _productsService.GetProductAsync(id);
+    if (product == null) return NotFound("Product not found.");
+
+    return Ok(product);
   }
 
   [HttpPost]
