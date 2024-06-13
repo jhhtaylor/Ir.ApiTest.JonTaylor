@@ -8,8 +8,6 @@ namespace Ir.FakeMarketplace.Controllers;
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
-
-
   private readonly ProductsService _productsService;
 
   public ProductsController(ProductsService productsService)

@@ -14,18 +14,18 @@ public class ProductsService
 
     public ProductsService(Context context)
     {
-
         _context = context;
-
     }
 
     public async Task<IActionResult> CreateProduct(Ir.IntegrationTest.Contracts.Product dtoProduct)
     {
+        // Task: Fail if the product already exists
         if (_context.Products.Any(p => p.Id == dtoProduct.Id))
         {
             return new BadRequestObjectResult("Product already exists.");
         }
 
+        // Task: Set Created and LastUpdated properties to Now regardless of what is passed in
         var entityProduct = new Ir.IntegrationTest.Entity.Models.Product
         {
             Id = dtoProduct.Id,
@@ -33,8 +33,8 @@ public class ProductsService
             Size = dtoProduct.Size,
             Colour = dtoProduct.Colour,
             Price = dtoProduct.Price,
-            LastUpdated = DateTimeOffset.UtcNow,
-            Created = DateTimeOffset.UtcNow,
+            LastUpdated = DateTimeOffset.UtcNow, // Set LastUpdated to current time
+            Created = DateTimeOffset.UtcNow, // Set Created to current time
             Hash = dtoProduct.Hash
         };
 
@@ -62,6 +62,7 @@ public class ProductsService
 
     public async Task<Ir.IntegrationTest.Contracts.Product> GetProductAsync(string id)
     {
+        // Task: Return the product with the matching Id or a 404 NotFound Result when there is no matching Id
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         if (product == null) return null;
 
@@ -80,35 +81,34 @@ public class ProductsService
 
     public async Task<IActionResult> UpdateProduct(string id, JsonPatchDocument<Ir.IntegrationTest.Contracts.Product> patchDoc)
     {
+        // Task: Update the product with the matching id
         var entityProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         if (entityProduct == null)
         {
+            // Task: Return a 404 NotFound if the product is not found
             return new NotFoundObjectResult("Product not found.");
         }
 
-        // Convert entity to DTO to apply the patch
         var dtoProduct = new Ir.IntegrationTest.Contracts.Product
         {
-            Id = entityProduct.Id,
+            Id = entityProduct.Id, // Ensure Id is not modified
             Name = entityProduct.Name,
             Size = entityProduct.Size,
             Colour = entityProduct.Colour,
             Price = entityProduct.Price,
             LastUpdated = entityProduct.LastUpdated,
-            Created = entityProduct.Created,
-            Hash = entityProduct.Hash
+            Created = entityProduct.Created, // Ensure Created is not modified
+            Hash = entityProduct.Hash // Ensure Hash is not modified
         };
 
-        // Apply the patch to the DTO
         patchDoc.ApplyTo(dtoProduct);
 
-        // Map the DTO back to the entity while ensuring protected fields are not changed
         entityProduct.Name = dtoProduct.Name;
         entityProduct.Size = dtoProduct.Size;
         entityProduct.Colour = dtoProduct.Colour;
         entityProduct.Price = dtoProduct.Price;
-        // Ensure Id, Created, and Hash are not modified
-        entityProduct.LastUpdated = DateTimeOffset.UtcNow; // Update LastUpdated to Now
+        // Task: Set LastUpdated to Now if a change is made
+        entityProduct.LastUpdated = DateTimeOffset.UtcNow;
 
         await _context.SaveChangesAsync();
         return new OkObjectResult(dtoProduct);
