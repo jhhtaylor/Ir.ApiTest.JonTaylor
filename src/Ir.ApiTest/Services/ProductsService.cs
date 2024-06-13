@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.JsonPatch;
+using System.Linq;
 
 public class ProductsService
 {
@@ -74,5 +76,41 @@ public class ProductsService
             Created = product.Created,
             Hash = product.Hash
         };
+    }
+
+    public async Task<IActionResult> UpdateProduct(string id, JsonPatchDocument<Ir.IntegrationTest.Contracts.Product> patchDoc)
+    {
+        var entityProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        if (entityProduct == null)
+        {
+            return new NotFoundObjectResult("Product not found.");
+        }
+
+        // Convert entity to DTO to apply the patch
+        var dtoProduct = new Ir.IntegrationTest.Contracts.Product
+        {
+            Id = entityProduct.Id,
+            Name = entityProduct.Name,
+            Size = entityProduct.Size,
+            Colour = entityProduct.Colour,
+            Price = entityProduct.Price,
+            LastUpdated = entityProduct.LastUpdated,
+            Created = entityProduct.Created,
+            Hash = entityProduct.Hash
+        };
+
+        // Apply the patch to the DTO
+        patchDoc.ApplyTo(dtoProduct);
+
+        // Map the DTO back to the entity while ensuring protected fields are not changed
+        entityProduct.Name = dtoProduct.Name;
+        entityProduct.Size = dtoProduct.Size;
+        entityProduct.Colour = dtoProduct.Colour;
+        entityProduct.Price = dtoProduct.Price;
+        // Ensure Id, Created, and Hash are not modified
+        entityProduct.LastUpdated = DateTimeOffset.UtcNow; // Update LastUpdated to Now
+
+        await _context.SaveChangesAsync();
+        return new OkObjectResult(dtoProduct);
     }
 }

@@ -40,8 +40,8 @@ public class ProductsController : ControllerBase
   }
 
   [HttpPatch("{id}")]
-  public IActionResult UpdateProduct([FromBody] JsonPatchDocument<Product> productPatchDocument)
+  public async Task<IActionResult> UpdateProduct([FromRoute] string id, [FromBody] JsonPatchDocument<Product> productPatchDocument)
   {
-    throw new NotImplementedException();
+    return await _productsService.UpdateProduct(id, productPatchDocument);
   }
 }
