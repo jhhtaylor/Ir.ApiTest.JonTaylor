@@ -35,13 +35,13 @@ public class ProductsService
             Price = dtoProduct.Price,
             LastUpdated = DateTimeOffset.UtcNow, // Set LastUpdated to current time
             Created = DateTimeOffset.UtcNow, // Set Created to current time
-            Hash = dtoProduct.Hash
+            Hash = GenerateHash(dtoProduct) // Generate a hash from the product data
         };
 
         _context.Products.Add(entityProduct);
         await _context.SaveChangesAsync();
 
-        return new OkObjectResult(dtoProduct);
+        return new OkObjectResult(entityProduct);
     }
 
     public async Task<IEnumerable<Ir.IntegrationTest.Contracts.Product>> GetAllProductsAsync(int page = 1, int pageSize = 10, DateTimeOffset? lastUpdatedAfter = null)
@@ -108,7 +108,6 @@ public class ProductsService
             Created = entityProduct.Created, // Ensure Created is not modified
             Hash = entityProduct.Hash // Ensure Hash is not modified
         };
-
         patchDoc.ApplyTo(dtoProduct);
 
         entityProduct.Name = dtoProduct.Name;
@@ -117,8 +116,18 @@ public class ProductsService
         entityProduct.Price = dtoProduct.Price;
         // Task: Set LastUpdated to Now if a change is made
         entityProduct.LastUpdated = DateTimeOffset.UtcNow;
-
+        entityProduct.Hash = GenerateHash(dtoProduct);
         await _context.SaveChangesAsync();
         return new OkObjectResult(dtoProduct);
+    }
+
+    private string GenerateHash(Ir.IntegrationTest.Contracts.Product product)
+    {
+        var stringToHash = $"{product.Name}{product.Size}{product.Colour}{product.Price}";
+        using (var sha256 = System.Security.Cryptography.SHA256.Create())
+        {
+            var hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(stringToHash));
+            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLowerInvariant();
+        }
     }
 }
