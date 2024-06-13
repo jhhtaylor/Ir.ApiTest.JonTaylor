@@ -16,9 +16,9 @@ public class ProductsController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<IActionResult> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+  public async Task<IActionResult> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] DateTimeOffset? lastUpdatedAfter = null)
   {
-    var products = await _productsService.GetAllProductsAsync(page, pageSize);
+    var products = await _productsService.GetAllProductsAsync(page, pageSize, lastUpdatedAfter);
     return Ok(products);
   }
 
