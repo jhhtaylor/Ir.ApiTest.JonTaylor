@@ -1,43 +1,60 @@
 using Ir.IntegrationTest.Contracts;
+using Ir.IntegrationTest.Entity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 public class ProductsService
 {
-    private List<Product> _products;
+    private readonly Context _context;
 
-    public ProductsService()
+    public ProductsService(Context context)
     {
-        // Initialize with more detailed dummy data
-        _products = new List<Product>
-        {
-            new Product 
-            {
-                Id = "1",
-                Name = "Classic Tee",
-                Size = "M",
-                Colour = "Red",
-                Price = 15.99,
-                LastUpdated = DateTimeOffset.UtcNow,
-                Created = DateTimeOffset.UtcNow.AddDays(-10),
-                Hash = Guid.NewGuid().ToString()
-            },
-            new Product 
-            {
-                Id = "2",
-                Name = "Vintage Jeans",
-                Size = "L",
-                Colour = "Blue",
-                Price = 45.50,
-                LastUpdated = DateTimeOffset.UtcNow,
-                Created = DateTimeOffset.UtcNow.AddDays(-20),
-                Hash = Guid.NewGuid().ToString()
-            }
-        };
+
+        _context = context;
+
     }
 
-    public IEnumerable<Product> GetAllProducts()
+    public async Task<IActionResult> CreateProduct(Ir.IntegrationTest.Contracts.Product dtoProduct)
     {
-        return _products;
+        if (_context.Products.Any(p => p.Id == dtoProduct.Id))
+        {
+            return new BadRequestObjectResult("Product already exists.");
+        }
+
+        var entityProduct = new Ir.IntegrationTest.Entity.Models.Product
+        {
+            Id = dtoProduct.Id,
+            Name = dtoProduct.Name,
+            Size = dtoProduct.Size,
+            Colour = dtoProduct.Colour,
+            Price = dtoProduct.Price,
+            LastUpdated = DateTimeOffset.UtcNow,
+            Created = DateTimeOffset.UtcNow,
+            Hash = dtoProduct.Hash
+        };
+
+        _context.Products.Add(entityProduct);
+        await _context.SaveChangesAsync();
+
+        return new OkObjectResult(dtoProduct);
+    }
+
+    public async Task<IEnumerable<Ir.IntegrationTest.Contracts.Product>> GetAllProductsAsync()
+    {
+        var products = await _context.Products.ToListAsync();
+        return products.Select(p => new Ir.IntegrationTest.Contracts.Product
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Size = p.Size,
+            Colour = p.Colour,
+            Price = p.Price,
+            LastUpdated = p.LastUpdated,
+            Created = p.Created,
+            Hash = p.Hash
+        }).ToList();
     }
 }

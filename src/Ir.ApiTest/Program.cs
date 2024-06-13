@@ -15,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<Context>(options => options.UseInMemoryDatabase(databaseName: "Database"));
 
-builder.Services.AddSingleton<ProductsService>();
+builder.Services.AddScoped<ProductsService>();
 
 var app = builder.Build();
 

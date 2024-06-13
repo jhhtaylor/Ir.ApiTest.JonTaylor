@@ -18,9 +18,9 @@ public class ProductsController : ControllerBase
   }
 
   [HttpGet]
-  public IActionResult GetProducts()
+  public async Task<IActionResult> GetProducts()
   {
-    var products = _productsService.GetAllProducts();
+    var products = await _productsService.GetAllProductsAsync();
     return Ok(products);
   }
 
@@ -30,10 +30,10 @@ public class ProductsController : ControllerBase
     throw new NotImplementedException();
   }
 
-  [HttpPost()]
-  public IActionResult CreateProduct([FromBody] Product product)
+  [HttpPost]
+  public async Task<IActionResult> CreateProduct([FromBody] Product product)
   {
-    throw new NotImplementedException();
+    return await _productsService.CreateProduct(product);
   }
 
   [HttpPatch("{id}")]
