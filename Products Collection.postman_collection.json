@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "79a13ffc-860e-4a79-b699-74900c541aaa",
+		"name": "Products Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15922797"
+	},
+	"item": [
+		{
+			"name": "GetAllProductsAsync",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5178/api/products?page=2&pageSize=5&lastUpdatedAfter=2024-06-01T00:00:00Z",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5178",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						},
+						{
+							"key": "lastUpdatedAfter",
+							"value": "2024-06-01T00:00:00Z"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateProduct",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Id\": \"1`\",\n  \"Name\": \"Classic Tee\",\n  \"Size\": \"M\",\n  \"Colour\": \"Red\",\n  \"Price\": 15.99\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5178/api/Products/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5178",
+					"path": [
+						"api",
+						"Products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetProductAsync",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5178/api/Products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5178",
+					"path": [
+						"api",
+						"Products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateProduct",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"op\": \"replace\",\n        \"path\": \"/Name\",\n        \"value\": \"Classic Tee 2\"\n    },\n    {\n        \"op\": \"replace\",\n        \"path\": \"/Size\",\n        \"value\": \"M\"\n    },\n    {\n        \"op\": \"replace\",\n        \"path\": \"/Colour\",\n        \"value\": \"Red\"\n    },\n    {\n        \"op\": \"replace\",\n        \"path\": \"/Price\",\n        \"value\": 15.99\n    }\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5178/api/Products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5178",
+					"path": [
+						"api",
+						"Products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
