@@ -3,7 +3,7 @@
 ## Overview
 This project consists of an API for managing products with features such as creation, retrieval, updating, and optional pagination and filtering. The implementation uses an in-memory database for simplicity.
 
-## Prerequisitve
+## Prerequisite
 Install .NET 7 SDK: Make sure you have the .NET 7 SDK installed on your machine. You can download it from the [.NET download page]([url](https://dotnet.microsoft.com/en-us/download)).
 
 ## How to run
