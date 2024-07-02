@@ -1,4 +1,4 @@
-# Intelligent Reach API Project
+# Demo .NET API Project
 
 ## Overview
 This project consists of an API for managing products with features such as creation, retrieval, updating, and optional pagination and filtering. The implementation uses an in-memory database for simplicity.
@@ -17,6 +17,3 @@ A Postman collection is included to facilitate testing of the API endpoints. Com
 
 ## Submission Note
 Navigate to the Ir.ApiTest project and run `dotnet run`. Refer to the embedded Postman collection for endpoint testing.
-
-Sincerely,
-Jon Taylor
